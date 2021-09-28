@@ -2,7 +2,6 @@
 
 from django.shortcuts import render, resolve_url
 import numpy as np
-import mibian
 import scipy
 import json
 import pandas as pd
@@ -33,8 +32,11 @@ def home(request):
 
         dfce = pd.read_csv(ce,usecols=ce_col)
         dfpe = pd.read_csv(pe,usecols=pe_col)
-        dffudi = pd.read_csv(fudi,usecols=["Date","LTP","Underlying Value"])
+        dffudi = pd.read_csv(fudi)
         
+        dffudi.columns = dffudi.columns.str.replace(' ','')
+        
+        dffudi = dffudi[["Date","LTP","UnderlyingValue"]]
 
         for pe in dfpe.iterrows():
             pe_d.append(pe[1]["LTP"])
@@ -50,7 +52,7 @@ def home(request):
             fu_d.append(du[1]["LTP"])
         
         for du in dffudi.iterrows():
-            fu_u.append(du[1]["Underlying Value"])
+            fu_u.append(du[1]["UnderlyingValue"])
 
         
         context = {
